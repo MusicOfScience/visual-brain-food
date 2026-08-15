@@ -1,6 +1,6 @@
 {
   "name": "optical-weather",
-  "version": "2.0.0-candidate.1",
+  "version": "4.1.0-candidate.1",
   "private": true,
   "description": "A static moving-image cinematheque.",
   "scripts": {
