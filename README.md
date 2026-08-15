@@ -8,15 +8,15 @@ The public site is published with GitHub Pages:
 
 ## Collection
 
-- 11 ready-made long-form YouTube playlists.
-- 36 curated programmes with 267 running-order entries.
+- 11 ready-made long-form YouTube playlists in the v3 historical base.
+- 36 curated programmes with 267 running-order entries in the v3 historical base.
 - One-action discovery for transport, company or attentive watching.
 - Shareable, history-aware discovery results.
 - Browse territories and a precise catalogue index.
 - Quiet viewing-access routes and honest copy-level limitations.
-- Resilient `Find current copy` searches for every running-order entry.
+- Resilient routes that can use verified institutional sources, precise YouTube `Find current copy` searches, or both.
 
-Direct links are used when reasonably stable. They are always additional to, never a replacement for, the search fallback.
+v4.1 extends the historical base through `content/curation.js`; the public footer derives programme and route totals from the assembled catalogue rather than hard-coded numbers.
 
 ## Architecture
 
@@ -24,15 +24,20 @@ The site is plain HTML, CSS and browser JavaScript. It has no build step, framew
 
 - `index.html` — semantic document shell.
 - `styles.css` — responsive editorial design system.
-- `app.js` — hash routing, rendering, discovery and index filtering.
+- `app.js` — stable v3 hash routing, rendering, discovery and index filtering.
 - `metadata-v2.js` — stable programme IDs and the backwards-compatible v3 discovery, browse, access and editorial metadata layer.
-- `data-ready.js` — ready-made playlist shelf.
-- `data-1.js`–`data-4.js` — original curated programme data.
+- `data-ready.js` — historical ready-made playlist shelf.
+- `data-1.js`–`data-4.js` — historical curated programme data.
+- `content/curation.js` — the human-editable v4.1 in-house curation layer for new/revised reservoirs, programmes and programme metadata.
+- `content/registry.js` — validates source provenance and deterministically merges the curation layer before `app.js` starts.
+- `content/source-actions.js` — progressively adds verified institutional watch actions and non-YouTube reservoirs after the stable renderer runs.
 - `docs/v2-design-rationale.md` — audit, ontology, IA, wireframes and red-team decisions.
 - `docs/v3-plan-and-release-gates.md` — v3 team review, implemented scope, accessibility policy, curatorial roadmap and release gates.
-- `tests/catalogue.test.mjs` — catalogue and static-shell validation.
+- `docs/v4.1-content-management.md` — v4.1 editorial workflow, source model, replacement rules and migration rationale.
+- `tests/catalogue.test.mjs` — historical catalogue and static-shell validation.
+- `tests/content-management.test.mjs` — v4.1 overlay, provenance, validation and assembled-count checks.
 
-The v3 candidate still leaves the original programme files intact. It adds programme-level editorial corrections, honest access guidance and the first work-level sensory/context notes through metadata overrides. Full item/copy normalisation—stable work IDs, source kinds, structured makers/years, captions, subtitle languages and verification dates—remains a deliberate editorial migration and is never inferred from a YouTube search result.
+The historical programme files remain intact. Programme-level editorial corrections, access guidance and work-level sensory/context notes can be layered through controlled metadata rather than inferred from search results. v4.1 begins explicit source provenance with source kinds and verification dates for new non-YouTube institutional routes; fuller copy-level normalisation remains a deliberate editorial migration.
 
 ## Test
 
@@ -42,12 +47,19 @@ Node 20 or later is sufficient. There are no packages to install.
 npm test
 ```
 
-The tests verify collection counts, programme IDs, controlled ontology values, discovery coverage, duration arithmetic, YouTube fallback formats and core access hooks.
+GitHub Actions also runs the test suite for pushes and pull requests touching the repository.
 
 ## Updating the catalogue
 
-1. Edit the relevant programme data file.
-2. Preserve a precise YouTube search for every item.
-3. Add or update the programme entry in `metadata-v2.js`.
-4. Run `npm test`.
-5. Review the site at desktop and narrow mobile widths before proposing publication.
+For normal in-house curation, **do not edit `app.js`, `data-ready.js`, `data-1.js`–`data-4.js` or `metadata-v2.js`.** Those files are the historical/application base.
+
+1. Add or revise the reservoir/programme in `content/curation.js`.
+2. Give each programme item at least one resilient route: a verified direct HTTPS source or a precise YouTube `Find current copy` fallback. Use both when that genuinely improves resilience.
+3. For a non-YouTube direct source, supply a human-facing source label, controlled `sourceKind` and `verified` date.
+4. For a new programme ID, add a matching `metadata.programmes` entry in the same curation file.
+5. Add access claims only when they have actually been checked. Never infer captions, subtitles, intertitles, language or sensory characteristics from a title or search result.
+6. Run `npm test`.
+7. Preview desktop and narrow mobile widths.
+8. Review through the normal feature-branch/pull-request flow before publication.
+
+If a change genuinely requires altering the historical base or application logic, treat it as a code migration rather than routine content editing and document why.
