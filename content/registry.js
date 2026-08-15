@@ -4,6 +4,11 @@
   const patch = window.OPTICAL_WEATHER_CURATION || {};
   const idFromTitle = (title) => String(title || "").match(/^(\d{2})\s+—/)?.[1] || "";
   const isObject = (value) => value && typeof value === "object" && !Array.isArray(value);
+  const isHttps = (url) => /^https:\/\//.test(String(url || ""));
+  const isYouTube = (url) => /^https:\/\/(www\.)?youtube\.com\//.test(String(url || ""));
+  const isYouTubeSearch = (url) => /^https:\/\/www\.youtube\.com\/results\?search_query=/.test(String(url || ""));
+  const isIsoDate = (value) => /^\d{4}-\d{2}-\d{2}$/.test(String(value || ""));
+  const sourceKinds = new Set(["archive", "museum", "cinematheque", "broadcaster", "artist", "distributor", "institution"]);
   const fail = (message) => { throw new Error(`OPTICAL WEATHER curation: ${message}`); };
 
   function assertUnique(items, keyOf, label) {
@@ -16,12 +21,24 @@
     });
   }
 
+  function validateInstitutionalSource(item, label, urlField = "watch", labelField = "watchLabel") {
+    const url = item?.[urlField];
+    if (!isHttps(url) || isYouTube(url)) return;
+    if (!String(item?.[labelField] || "").trim()) fail(`${label} needs ${labelField} for a non-YouTube source.`);
+    if (!sourceKinds.has(String(item?.sourceKind || ""))) {
+      fail(`${label} needs sourceKind (${Array.from(sourceKinds).join(", ")}).`);
+    }
+    if (!isIsoDate(item?.verified)) fail(`${label} needs verified in YYYY-MM-DD form.`);
+  }
+
   function validateReady(items) {
     assertUnique(items, (item) => String(item?.title || "").trim(), "ready-made stream");
     items.forEach((item, index) => {
-      if (!String(item?.description || "").trim()) fail(`ready-made stream ${index + 1} needs a description.`);
-      if (!Array.isArray(item?.tags)) fail(`ready-made stream ${index + 1} needs a tags array.`);
-      if (!/^https:\/\//.test(String(item?.url || ""))) fail(`ready-made stream ${index + 1} needs an https URL.`);
+      const label = `ready-made stream ${index + 1}`;
+      if (!String(item?.description || "").trim()) fail(`${label} needs a description.`);
+      if (!Array.isArray(item?.tags)) fail(`${label} needs a tags array.`);
+      if (!isHttps(item?.url)) fail(`${label} needs an https URL.`);
+      validateInstitutionalSource(item, label, "url", "sourceLabel");
     });
   }
 
@@ -37,15 +54,21 @@
       if (!Array.isArray(programme?.modes) || !programme.modes.length) fail(`programme ${id} needs at least one mode.`);
 
       programme.items.forEach((item, itemIndex) => {
-        if (!String(item?.title || "").trim()) fail(`programme ${id}, item ${itemIndex + 1} needs a title.`);
-        if (!String(item?.credit || "").trim()) fail(`programme ${id}, item ${itemIndex + 1} needs a credit.`);
-        if (!String(item?.runtime || "").trim()) fail(`programme ${id}, item ${itemIndex + 1} needs a runtime.`);
-        if (!/^https:\/\/www\.youtube\.com\/results\?search_query=/.test(String(item?.search || ""))) {
-          fail(`programme ${id}, item ${itemIndex + 1} needs a resilient YouTube search fallback.`);
+        const label = `programme ${id}, item ${itemIndex + 1}`;
+        if (!String(item?.title || "").trim()) fail(`${label} needs a title.`);
+        if (!String(item?.credit || "").trim()) fail(`${label} needs a credit.`);
+        if (!String(item?.runtime || "").trim()) fail(`${label} needs a runtime.`);
+
+        const hasWatch = isHttps(item?.watch);
+        const hasSearch = isYouTubeSearch(item?.search);
+        if (!hasWatch && !hasSearch) {
+          fail(`${label} needs either a verified direct watch source or a resilient YouTube search fallback.`);
         }
-        if (item?.watch != null && !/^https:\/\//.test(String(item.watch))) {
-          fail(`programme ${id}, item ${itemIndex + 1} has an invalid direct watch URL.`);
+        if (item?.watch != null && !hasWatch) fail(`${label} has an invalid direct watch URL.`);
+        if (item?.search != null && String(item.search).trim() && !hasSearch) {
+          fail(`${label} has an invalid YouTube search fallback.`);
         }
+        validateInstitutionalSource(item, label);
       });
 
       if (!existingIds.has(id) && !isObject(metadata?.[id])) {
