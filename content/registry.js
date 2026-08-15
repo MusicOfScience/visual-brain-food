@@ -122,8 +122,10 @@
     source: "content/curation.js"
   });
 
-  const countNode = document.getElementById("collection-count");
-  if (countNode) {
-    countNode.textContent = `${window.OPTICAL_WEATHER_CONTENT.programmeCount} programmes · ${routeCount} routes into moving-image culture`;
+  if (typeof document !== "undefined") {
+    const countNode = document.getElementById("collection-count");
+    if (countNode) {
+      countNode.textContent = `${window.OPTICAL_WEATHER_CONTENT.programmeCount} programmes · ${routeCount} routes into moving-image culture`;
+    }
   }
 })();
