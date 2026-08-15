@@ -10,6 +10,12 @@
  * - programmes match by their two-digit programme id (e.g. "07")
  * - metadata is merged by programme id
  *
+ * Source model:
+ * - YouTube routes remain valid and useful for resilience.
+ * - A verified institutional direct source may stand on its own.
+ * - Non-YouTube direct sources must identify sourceLabel/watchLabel,
+ *   sourceKind and verified date (YYYY-MM-DD).
+ *
  * Keep this file reviewable: one editorial change per object, no generated
  * scraping, no automatic claims about captions/subtitles/accessibility.
  */
@@ -20,10 +26,13 @@ window.OPTICAL_WEATHER_CURATION = {
   ready: [
     /*
     {
-      title: "Example ready-made stream",
+      title: "Example archive reservoir",
       description: "What it is and why it belongs here.",
-      tags: ["Example"],
-      url: "https://www.youtube.com/playlist?list=..."
+      tags: ["Archive"],
+      url: "https://institution.example/collection",
+      sourceLabel: "Example Archive",
+      sourceKind: "archive",
+      verified: "2026-08-16"
     }
     */
   ],
@@ -40,9 +49,22 @@ window.OPTICAL_WEATHER_CURATION = {
           title: "Work title",
           credit: "Maker, year",
           runtime: "42m",
-          watch: null,
+          watch: "https://institution.example/work",
+          watchLabel: "Watch at Example Archive",
+          sourceKind: "archive",
+          verified: "2026-08-16",
           search: "https://www.youtube.com/results?search_query=...",
           note: ""
+        },
+        {
+          title: "Institutional-only work",
+          credit: "Maker, year",
+          runtime: "12m",
+          watch: "https://institution.example/another-work",
+          watchLabel: "Watch at Example Archive",
+          sourceKind: "archive",
+          verified: "2026-08-16",
+          note: "A verified institutional source can stand without a YouTube fallback."
         }
       ],
       modes: ["WATCH PROPERLY"]
