@@ -8,7 +8,7 @@
   curation.version = "4.2";
   curation.updated = "2026-08-16";
 
-  curation.ready.push(
+  const additions = [
     {
       title: "BFI Player — Free Archive Collections",
       description: "Thousands of free archive films and curated collections from the BFI and UK archive partners: local actuality, amateur film, travel, industry, documentary and restored treasures. Playback is UK-only; use programme-level Find current copy routes elsewhere.",
@@ -63,5 +63,11 @@
       sourceKind: "archive",
       verified: "2026-08-16"
     }
-  );
+  ];
+
+  additions.forEach((entry) => {
+    const index = curation.ready.findIndex((current) => current && current.title === entry.title);
+    if (index >= 0) curation.ready[index] = entry;
+    else curation.ready.push(entry);
+  });
 })();
