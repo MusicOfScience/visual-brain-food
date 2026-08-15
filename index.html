@@ -1,147 +1,59 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Hudson Visual Brain Food</title>
-<meta name="description" content="A private-public cinematheque of film history, animation, avant-garde cinema, print, photography, design and gallery brain food.">
-<style>
-:root{--bg:#0b0b0d;--panel:#151518;--panel2:#1b1b1f;--line:#303038;--text:#f2f2f4;--muted:#aaaab3;--accent:#b8dbff;--accent2:#decfff}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.5}
-.wrap{max-width:1240px;margin:auto;padding:30px 18px 90px}h1{font-size:clamp(38px,7vw,68px);letter-spacing:-.05em;line-height:.95;margin:10px 0}.lede{max-width:850px;color:var(--muted);font-size:18px}
-nav{position:sticky;top:0;z-index:10;background:rgba(11,11,13,.91);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}nav .inner{max-width:1240px;margin:auto;padding:10px 18px;display:flex;gap:8px;flex-wrap:wrap}
-nav a{color:#d6d6db;text-decoration:none;font-size:13px;padding:6px 9px;border:1px solid #34343a;border-radius:999px}
-.section{margin-top:48px;padding-top:22px;border-top:1px solid var(--line)}h2{font-size:28px;margin:0 0 8px}.muted{color:var(--muted)}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:16px}.card h3{font-size:19px;margin:4px 0 7px}.kicker{font-size:11px;text-transform:uppercase;letter-spacing:.14em;color:#81818b}
-.tag{display:inline-block;font-size:11px;padding:4px 7px;border-radius:999px;border:1px solid #3b3b43;margin:3px 3px 0 0;color:#c7c7cf}
-button,.btn{appearance:none;border:1px solid #45454d;background:#202024;color:var(--accent);border-radius:9px;padding:8px 10px;font:inherit;font-size:13px;text-decoration:none;cursor:pointer}
-button:hover,.btn:hover{background:#29292f}.controls{background:linear-gradient(140deg,#151519,#1b1820);border:1px solid #37343f;border-radius:18px;padding:18px;margin-top:22px}
-.controlrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:10px 0}.controlrow label{font-size:12px;color:#bcbcc5}
-input[type="search"]{width:min(520px,100%);background:#0f0f12;border:1px solid #3d3d45;color:white;border-radius:10px;padding:11px 12px;font:inherit}
-select{background:#101013;color:#eee;border:1px solid #3d3d45;border-radius:9px;padding:8px 10px}
-.toggle{display:inline-flex;gap:5px;align-items:center}.toggle input{accent-color:#aaa}
-.results-head{display:flex;justify-content:space-between;gap:12px;align-items:end;margin:25px 0 12px}.count{font-size:13px;color:var(--muted)}
-.programme{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden;margin:12px 0}.phead{padding:16px;cursor:pointer}.phead h3{margin:2px 0;font-size:21px}.pdesc{color:#b4b4bd;font-size:13px}.pmeta{font-size:12px;color:#90909a;margin-top:7px}
-.items{display:none;border-top:1px solid var(--line)}.programme.open .items{display:block}.item{display:grid;grid-template-columns:1fr auto;gap:12px;padding:12px 16px;border-top:1px solid #29292e}.item:first-child{border-top:0}
-.ititle{font-weight:650}.credit,.note{font-size:12px;color:#9f9fa8}.actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;align-content:start}
-.rec{border:1px solid #5c536b;box-shadow:0 0 0 1px rgba(222,207,255,.06) inset}.score{font-size:11px;color:var(--accent2)}
-.hero-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}.hide{display:none!important}.footer{margin-top:50px;color:#85858e;font-size:12px}
-@media(max-width:650px){.item{grid-template-columns:1fr}.actions{justify-content:flex-start}.wrap{padding-left:13px;padding-right:13px}}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#11110f">
+  <meta name="description" content="OPTICAL WEATHER is a moving-image cinematheque for film history, visual culture and the life of a screen in a room.">
+  <meta property="og:title" content="OPTICAL WEATHER">
+  <meta property="og:description" content="A moving-image cinematheque: 36 long-form programmes and resilient routes to 267 works.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://musicofscience.github.io/visual-brain-food/">
+  <link rel="canonical" href="https://musicofscience.github.io/visual-brain-food/">
+  <link rel="stylesheet" href="styles.css">
+  <title>OPTICAL WEATHER — A moving-image cinematheque</title>
 </head>
 <body>
-<nav><div class="inner"><a href="#ready">Press Play Now</a><a href="#recommend">Choose by mood</a><a href="#library">Cinematheque</a></div></nav>
-<div class="wrap">
-<header>
-<div class="kicker">Film history · visual culture · long-form brain food</div>
-<h1>Hudson Visual Brain Food</h1>
-<div class="lede">A bookmarkable cinematheque for proper watching, half-watching and turning a screen into a moving wall: national cinemas, avant-gardes, adult animation, silent film, print, photography, design, archives and gallery walks.</div>
-<div class="hero-actions"><button id="surprise">Surprise me</button><button id="backgroundBtn">I need background brain food</button><button id="properBtn">Give me a proper film night</button></div>
-</header>
+  <a class="skip-link" href="#main">Skip to content</a>
 
-<section class="section" id="ready">
-<h2>1 — Press Play Now</h2>
-<p class="muted">Existing YouTube playlists. No programming decisions required.</p>
-<div class="grid" id="readyGrid"></div>
-</section>
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="wordmark" href="#discover" aria-label="OPTICAL WEATHER, Discover">
+        <span>OPTICAL</span>
+        <span>WEATHER</span>
+      </a>
+      <nav class="site-nav" aria-label="Primary navigation">
+        <a href="#discover" data-nav="discover">Discover</a>
+        <a href="#browse" data-nav="browse">Browse</a>
+        <a href="#index" data-nav="index">Index</a>
+        <a href="#about" data-nav="about">About</a>
+      </nav>
+    </div>
+  </header>
 
-<section class="section" id="recommend">
-<h2>2 — Choose by mood / use</h2>
-<p class="muted">This is deliberately a small client-side recommendation engine. No login, server, tracking or API key.</p>
-<div class="controls">
-<div class="controlrow"><input id="search" type="search" placeholder="Search movement, country, filmmaker, process…"></div>
-<div class="controlrow">
-<label>Attention
-<select id="attention"><option value="">Any</option><option>BACKGROUND</option><option>LOW ATTENTION</option><option>WATCH PROPERLY</option></select></label>
-<label>Duration
-<select id="duration"><option value="">Any</option><option value="6">~6 hours</option><option value="7">~7 hours</option><option value="8">~8 hours</option><option value="9">~9 hours</option><option value="10">~10 hours</option></select></label>
-</div>
-<div class="controlrow" id="modeToggles"></div>
-<div class="controlrow"><button id="apply">Recommend</button><button id="clear">Clear</button></div>
-</div>
-</section>
+  <main id="main" tabindex="-1">
+    <div id="app" class="app-shell" aria-live="off"></div>
+    <noscript>
+      <section class="no-script page-section">
+        <p class="eyebrow">JavaScript is off</p>
+        <h1>OPTICAL WEATHER needs JavaScript to assemble the catalogue.</h1>
+        <p>The site has no account, tracking or external application service. Enable JavaScript, then reload this page.</p>
+      </section>
+    </noscript>
+  </main>
 
-<section class="section" id="library">
-<div class="results-head"><div><h2>3 — Hudson Cinematheque</h2><div class="muted">Click a programme to open the running order.</div></div><div class="count" id="count"></div></div>
-<div id="programmeList"></div>
-</section>
+  <footer class="site-footer">
+    <p><span>OPTICAL WEATHER</span> · 36 programmes · 267 routes into moving-image culture</p>
+    <p>YouTube availability changes. “Find current copy” is intentional resilience.</p>
+  </footer>
 
-<div class="footer">YouTube links move and disappear. “Find current copy” searches are intentional resilience, not placeholders. Updated <span id="updated"></span>.</div>
-</div>
-<script src="data-ready.js"></script>
-<script src="data-1.js"></script>
-<script src="data-2.js"></script>
-<script src="data-3.js"></script>
-<script src="data-4.js"></script>
-<script>
-window.CINEMATHEQUE_DATA = {ready: window.CINEMATHEQUE_READY, programmes: window.CINEMATHEQUE_PROGRAMMES || [], updated: window.CINEMATHEQUE_UPDATED};
-</script>
-<script>
-const D=window.CINEMATHEQUE_DATA;
-const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
-document.getElementById('updated').textContent=D.updated;
-const readyGrid=document.getElementById('readyGrid');
-D.ready.forEach(x=>{
- const d=document.createElement('div'); d.className='card';
- d.innerHTML=`<div class="kicker">Existing YouTube playlist</div><h3>${esc(x.title)}</h3><div class="pdesc">${esc(x.description)}</div><div>${x.tags.map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</div><div class="hero-actions"><a class="btn" target="_blank" rel="noopener" href="${esc(x.url)}">Open playlist →</a></div>`;
- readyGrid.appendChild(d);
-});
-
-const allModes=[...new Set(D.programmes.flatMap(p=>p.modes))].sort();
-const skip=new Set(['BACKGROUND','LOW ATTENTION','WATCH PROPERLY']);
-const mt=document.getElementById('modeToggles');
-allModes.filter(m=>!skip.has(m)).forEach(m=>{
- const l=document.createElement('label'); l.className='toggle';
- l.innerHTML=`<input type="checkbox" value="${esc(m)}"> ${esc(m)}`; mt.appendChild(l);
-});
-
-function searchable(p){return [p.title,p.description,...p.tags,...p.modes,...p.items.flatMap(i=>[i.title,i.credit])].join(' ').toLowerCase()}
-function scoreProgramme(p, opts){
- let score=0;
- if(opts.q){
-   const s=searchable(p); const terms=opts.q.toLowerCase().split(/\s+/).filter(Boolean);
-   const hits=terms.filter(t=>s.includes(t)).length; if(!hits)return -999; score+=hits*5;
- }
- if(opts.attention){ if(p.modes.includes(opts.attention)) score+=8; else score-=3; }
- if(opts.duration){ score+=Math.max(0,5-Math.abs(p.duration/60-Number(opts.duration))*2); }
- opts.modes.forEach(m=>{ if(p.modes.includes(m))score+=6; else score-=1; });
- return score;
-}
-function opts(){
- return {q:document.getElementById('search').value.trim(),attention:document.getElementById('attention').value,
- duration:document.getElementById('duration').value,modes:[...mt.querySelectorAll('input:checked')].map(x=>x.value)};
-}
-function render(recommend=false){
- const o=opts();
- let arr=D.programmes.map((p,i)=>({p,i,score:scoreProgramme(p,o)})).filter(x=>x.score>-999);
- const active=o.q||o.attention||o.duration||o.modes.length;
- if(recommend&&active)arr.sort((a,b)=>b.score-a.score||a.i-b.i);
- else arr.sort((a,b)=>a.i-b.i);
- const host=document.getElementById('programmeList');host.innerHTML='';
- arr.forEach((x,idx)=>{
-  const p=x.p,d=document.createElement('article');d.className='programme'+(recommend&&active&&idx<5?' rec':'');
-  const hrs=p.duration?`${Math.floor(p.duration/60)}h ${String(p.duration%60).padStart(2,'0')}m`:'';
-  d.innerHTML=`<div class="phead"><div class="kicker">${recommend&&active&&idx<5?`Recommended · score ${Math.round(x.score)}`:'Curated programme'}</div><h3>${esc(p.title)}</h3><div class="pdesc">${esc(p.description)}</div><div class="pmeta">${esc(hrs)} · ${p.modes.map(m=>esc(m)).join(' · ')}</div><div>${p.tags.map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</div></div><div class="items"></div>`;
-  const items=d.querySelector('.items');
-  p.items.forEach(i=>{
-    const row=document.createElement('div');row.className='item';
-    let actions=''; if(i.watch)actions+=`<a class="btn" target="_blank" rel="noopener" href="${esc(i.watch)}">Watch</a>`;
-    if(i.search)actions+=`<a class="btn" target="_blank" rel="noopener" href="${esc(i.search)}">Find current copy</a>`;
-    row.innerHTML=`<div><div class="ititle">${esc(i.title)} <span class="credit">${esc(i.runtime||'')}</span></div><div class="credit">${esc(i.credit)}</div>${i.note?`<div class="note">${esc(i.note)}</div>`:''}</div><div class="actions">${actions}</div>`;
-    items.appendChild(row);
-  });
-  d.querySelector('.phead').onclick=()=>d.classList.toggle('open');
-  host.appendChild(d);
- });
- document.getElementById('count').textContent=`${arr.length} programmes`;
-}
-document.getElementById('apply').onclick=()=>render(true);
-document.getElementById('clear').onclick=()=>{document.getElementById('search').value='';document.getElementById('attention').value='';document.getElementById('duration').value='';mt.querySelectorAll('input').forEach(x=>x.checked=false);render(false)};
-document.getElementById('search').addEventListener('input',()=>render(false));
-document.getElementById('surprise').onclick=()=>{const p=D.programmes[Math.floor(Math.random()*D.programmes.length)];document.getElementById('search').value=p.title.replace(/^\d+\s+—\s+/,'');render(true);location.hash='library'};
-document.getElementById('backgroundBtn').onclick=()=>{document.getElementById('attention').value='BACKGROUND';render(true);location.hash='library'};
-document.getElementById('properBtn').onclick=()=>{document.getElementById('attention').value='WATCH PROPERLY';render(true);location.hash='library'};
-render(false);
-</script>
-</body></html>
+  <script src="data-ready.js" defer></script>
+  <script src="data-1.js" defer></script>
+  <script src="data-2.js" defer></script>
+  <script src="data-3.js" defer></script>
+  <script src="data-4.js" defer></script>
+  <script src="metadata-v2.js" defer></script>
+  <script src="app.js" defer></script>
+</body>
+</html>
