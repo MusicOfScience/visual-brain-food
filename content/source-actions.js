@@ -3,9 +3,14 @@
 
   const isHttps = (url) => /^https:\/\//.test(String(url || ""));
   const isYouTube = (url) => /^https:\/\/(www\.)?youtube\.com\//.test(String(url || ""));
+  const isBfiPlayer = (url) => /^https:\/\/player\.bfi\.org\.uk\//.test(String(url || ""));
   const idFromTitle = (title) => String(title || "").match(/^(\d{2})\s+—/)?.[1] || "";
   const programmes = () => Array.isArray(window.CINEMATHEQUE_PROGRAMMES) ? window.CINEMATHEQUE_PROGRAMMES : [];
   const streams = () => Array.isArray(window.CINEMATHEQUE_READY) ? window.CINEMATHEQUE_READY : [];
+  const youtubeSearch = (item) => {
+    const terms = `${item?.title || ""} ${item?.credit || ""}`.trim();
+    return `https://www.youtube.com/results?search_query=${encodeURIComponent(terms)}`;
+  };
 
   function currentProgramme() {
     const id = location.hash.match(/^#programme\/(\d{2})/)?.[1];
@@ -21,16 +26,36 @@
     programme.items?.forEach((item, index) => {
       if (!isHttps(item?.watch) || isYouTube(item.watch)) return;
       const actions = rows[index]?.querySelector(".work-actions");
-      if (!actions || actions.querySelector('[data-source-action="institutional"]')) return;
+      if (!actions) return;
 
-      const link = document.createElement("a");
-      link.href = item.watch;
-      link.target = "_blank";
-      link.rel = "noopener noreferrer";
-      link.dataset.sourceAction = "institutional";
-      link.textContent = `${item.watchLabel || "Watch at source"} ↗`;
-      link.setAttribute("aria-label", `${item.watchLabel || "Watch at source"}: ${item.title}, opens in a new tab`);
-      actions.prepend(link);
+      if (!actions.querySelector('[data-source-action="institutional"]')) {
+        const link = document.createElement("a");
+        link.href = item.watch;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        link.dataset.sourceAction = "institutional";
+        const label = isBfiPlayer(item.watch)
+          ? `${item.watchLabel || "Watch at BFI"} (UK only)`
+          : (item.watchLabel || "Watch at source");
+        link.textContent = `${label} ↗`;
+        link.setAttribute("aria-label", `${label}: ${item.title}, opens in a new tab`);
+        actions.prepend(link);
+      }
+
+      // BFI Player playback is territorially restricted to the UK. When an
+      // editorial fallback was not supplied, preserve global resilience with
+      // a deterministic title/credit YouTube search rather than leaving an
+      // international viewer at a dead end.
+      if (isBfiPlayer(item.watch) && !item.search && !actions.querySelector('[data-source-action="territory-fallback"]')) {
+        const fallback = document.createElement("a");
+        fallback.href = youtubeSearch(item);
+        fallback.target = "_blank";
+        fallback.rel = "noopener noreferrer";
+        fallback.dataset.sourceAction = "territory-fallback";
+        fallback.textContent = "Find current copy ↗";
+        fallback.setAttribute("aria-label", `Find current copy of ${item.title} on YouTube, opens in a new tab`);
+        actions.append(fallback);
+      }
     });
   }
 
@@ -65,7 +90,9 @@
 
       const source = document.createElement("span");
       source.className = "stream-row__meta";
-      source.textContent = `${stream.sourceLabel || "Source"} ↗`;
+      source.textContent = isBfiPlayer(stream.url)
+        ? `${stream.sourceLabel || "BFI Player"} · UK only ↗`
+        : `${stream.sourceLabel || "Source"} ↗`;
 
       link.append(copy, source);
       row.append(link);
