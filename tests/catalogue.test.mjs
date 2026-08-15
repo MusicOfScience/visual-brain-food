@@ -43,10 +43,11 @@ test("the complete v1 collection is preserved", () => {
   assert.equal(items.length, 267);
 });
 
-test("programme IDs and v2 metadata are complete", () => {
+test("programme IDs and v3 metadata are complete", () => {
   const ids = Array.from(programmes, (programme) => programme.title.match(/^(\d{2})\s+—/)?.[1]);
   assert.deepEqual(ids, Array.from({ length: 36 }, (_, index) => String(index + 1).padStart(2, "0")));
   assert.deepEqual(Object.keys(metadata.programmes).sort((a, b) => Number(a) - Number(b)), ids);
+  assert.equal(metadata.version, 3);
 });
 
 test("controlled ontology values remain controlled", () => {
@@ -72,8 +73,34 @@ test("all browse territories and discovery directions return results", () => {
   for (const direction of metadata.directions) {
     assert.ok(entries.some((entry) => entry.directions.includes(direction.id)), `${direction.id} is empty`);
   }
+  assert.ok(metadata.accessRoutes.length >= 3);
   assert.ok(entries.some((entry) => entry.attention.includes("peripheral")), "Keep me company needs a peripheral result");
   assert.ok(entries.some((entry) => entry.attention.includes("attentive")), "I want to watch needs an attentive result");
+});
+
+test("every viewing-access route has an honest programme-level result", () => {
+  const entries = Object.values(metadata.programmes);
+  for (const route of metadata.accessRoutes) {
+    assert.ok(route.programmeIds.length, `${route.id} has no eligible programme`);
+    assert.ok(route.programmeIds.every((id) => metadata.programmes[id]), `${route.id} contains an unknown programme ID`);
+  }
+  assert.ok(entries.length > metadata.accessRoutes.length);
+  assert.deepEqual(Array.from(metadata.accessRoutes.find((route) => route.id === "subtitled").programmeIds), ["15", "28", "29", "30"]);
+  assert.equal(metadata.accessRoutes.some((route) => route.id === "sound-optional"), false, "Sound optional remains withheld pending manual audit");
+});
+
+test("known flicker risk is warned and excluded from unconstrained discovery", () => {
+  const structural = metadata.programmes["11"];
+  assert.equal(structural.excludeFromUnprompted, true);
+  assert.ok(structural.advisories.some((note) => /flicker|flashing/i.test(note)));
+  assert.match(structural.itemOverrides["The Flicker"].sensory, /flicker/i);
+});
+
+test("v3 editorial corrections are carried by metadata without rewriting the collection", () => {
+  assert.equal(metadata.programmes["04"].displayName, "Japanese Silent Modernities: Kinugasa / Ozu");
+  assert.equal(metadata.programmes["15"].period, "1930s–1980s");
+  assert.deepEqual(Array.from(metadata.programmes["27"].regions), ["Sweden", "Denmark", "Germany"]);
+  assert.equal(metadata.programmes["36"].itemOverrides["New Zealand Film Archive / Nga Taonga block"].title, "Ngā Taonga Sound & Vision archive block");
 });
 
 test("All night never promises less than eight hours", () => {
@@ -108,12 +135,16 @@ test("the static shell contains the required access and resilience hooks", () =>
   assert.match(html, /<main id="main"/);
   assert.match(html, /<nav[^>]+aria-label="Primary navigation"/);
   assert.match(html, /<noscript>/);
+  assert.match(html, /id="announcer"[^>]+aria-live="polite"/);
   assert.doesNotMatch(html, /Hudson/i);
   assert.doesNotMatch(app, /Hudson/i);
   assert.doesNotMatch(html, /onclick=/i);
   assert.match(app, /Find current copy/);
+  assert.match(app, /Access &amp; copy details/);
   assert.match(app, /<details class="programme-order" open>/);
   assert.match(css, /:focus-visible/);
   assert.match(css, /prefers-reduced-motion/);
   assert.match(css, /min-height:\s*2\.75rem/);
+  assert.doesNotMatch(css, /font-size:\s*0\.(?:7\d|8[0-4])rem/);
+  assert.match(css, /forced-colors:\s*active/);
 });

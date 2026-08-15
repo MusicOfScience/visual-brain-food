@@ -11,7 +11,9 @@ The public site is published with GitHub Pages:
 - 11 ready-made long-form YouTube playlists.
 - 36 curated programmes with 267 running-order entries.
 - One-action discovery for transport, company or attentive watching.
+- Shareable, history-aware discovery results.
 - Browse territories and a precise catalogue index.
+- Quiet viewing-access routes and honest copy-level limitations.
 - Resilient `Find current copy` searches for every running-order entry.
 
 Direct links are used when reasonably stable. They are always additional to, never a replacement for, the search fallback.
@@ -23,13 +25,14 @@ The site is plain HTML, CSS and browser JavaScript. It has no build step, framew
 - `index.html` — semantic document shell.
 - `styles.css` — responsive editorial design system.
 - `app.js` — hash routing, rendering, discovery and index filtering.
-- `metadata-v2.js` — stable programme IDs and controlled discovery/browse metadata.
+- `metadata-v2.js` — stable programme IDs and the backwards-compatible v3 discovery, browse, access and editorial metadata layer.
 - `data-ready.js` — ready-made playlist shelf.
 - `data-1.js`–`data-4.js` — original curated programme data.
 - `docs/v2-design-rationale.md` — audit, ontology, IA, wireframes and red-team decisions.
+- `docs/v3-plan-and-release-gates.md` — v3 team review, implemented scope, accessibility policy, curatorial roadmap and release gates.
 - `tests/catalogue.test.mjs` — catalogue and static-shell validation.
 
-The v2 metadata layer deliberately leaves the programme data intact. Item-level normalisation—stable work IDs, structured makers/years, source kinds and last-checked dates—is an editorial migration, not a prerequisite for the interface.
+The v3 candidate still leaves the original programme files intact. It adds programme-level editorial corrections, honest access guidance and the first work-level sensory/context notes through metadata overrides. Full item/copy normalisation—stable work IDs, source kinds, structured makers/years, captions, subtitle languages and verification dates—remains a deliberate editorial migration and is never inferred from a YouTube search result.
 
 ## Test
 
